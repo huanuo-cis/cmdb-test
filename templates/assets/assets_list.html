@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}资产管理{% endblock %}
+
+{% block css %}
+
+<!-- DataTables -->
+  <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        资产管理
+        <small>assets management</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li class="active">资产管理</li>
+        <li class="active">资产信息</li>
+      </ol>
+    </section>
+    <!-- Main Content -->
+    <section class="content">
+    <div class="row">
+    <div class="col-xs-12">
+
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">资产总表<small></small></h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+          <table id="assets_table" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <th>资产ID</th>
+              <th>资产名称</th>
+              <th>资产类型</th>
+              <th>SN</th>
+              <th>生产商</th>
+              <th>管理IP</th>
+              <th>设备标签</th>
+            </tr>
+            </thead>
+
+            <tbody>
+                {% for asset in assets_list %}
+                    <tr>
+                    <td>{{ asset.asset_id }}</td>
+                    <td>{{ asset.asset_name }}</td>
+                    {% if asset.asset_type == 'server' %}
+                        <td class="text-green text-bold">{{ asset.get_asset_type_display }}</td>
+                    {% elif asset.asset_type == 'networkdevice' %}
+                        <td class="text-yellow text-bold">{{ asset.get_asset_type_display }}</td>
+                    {% endif %}
+                    <td>{{ asset.asset_sn }}</td>
+                    <td>{{ asset.asset_manufacturer }}</td>
+                    <td>{{ asset.mgmt_ip }}</td>
+                    {% if asset.asset_hypervisor_type == 'physical_server' %}
+                        <td><label class="label label-primary">{{ asset.get_asset_hypervisor_type_display }}</label> </td>
+                    {% else %}
+                        <td><label class="label label-info">{{ asset.get_asset_hypervisor_type_display }}</label></td>
+                    {% endif %}
+                    </tr>
+            {% empty %}
+                    <tr>没有数据！</tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            </tfoot>
+          </table>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+    </div>
+    <!-- /.col -->
+    </div>
+    <!-- /.row -->
+    </section>
+{% endblock %}
+
+{% block script %}
+    <!-- DataTables -->
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+    <!-- SlimScroll -->
+    <script src="{% static 'plugins/slimScroll/jquery.slimscroll.min.js' %}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'plugins/fastclick/fastclick.js' %}"></script>
+    <!-- AdminLTE App -->
+    <script src="{% static 'dist/js/app.min.js' %}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="{% static 'dist/js/demo.js' %}"></script>
+    <!-- page script -->
+    <script>
+      $(function () {
+        $('#assets_table').DataTable({
+          "paging": true,       <!-- 允许分页 -->
+          "lengthChange": true, <!-- 允许改变每页显示的行数 -->
+          "searching": true,    <!-- 允许内容搜索 -->
+          "ordering": true,     <!-- 允许排序 -->
+          "info": true,         <!-- 显示信息 -->
+          "autoWidth": false    <!-- 固定宽度 -->
+        });
+      });
+    </script>
+{% endblock %}

@@ -1,0 +1,6 @@
+.idea
+db.sqlite3
+cmdb_test/__pycache__
+assets/__pycache__
+assets/migrations/__pycache__
+
